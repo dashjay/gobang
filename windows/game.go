@@ -14,14 +14,15 @@ type Game struct {
 
 func NewGame(w, h int) *Game {
 
+	// init board ptr
 	var board [][]int
+	// every Y
 	for tempy := 0; tempy <= w+1; tempy++ {
-		var line []int
-		for tempx := 0; tempx <= w+1; tempx++ {
-			line = append(line, 0)
-		}
+		// for every line ,init point state to 0
+		var line = make([]int, h+1)
 		board = append(board, line)
 	}
+
 	g := Game{
 		Width:  w,
 		Height: h,
@@ -29,24 +30,48 @@ func NewGame(w, h int) *Game {
 		str:    []string{" . ", " * ", " # "},
 	}
 
-	g.Board[1][2] = 1
 	return &g
 }
 
 func (g *Game) Print() string {
+	// header line like this
+	//  x  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20x轴
 	var header strings.Builder
+
+	// output multi line like this
+	// 1  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+	// 2  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+	// ...
+	// 10  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
 	var output strings.Builder
+	// write a mount point to (0, 0)
 	header.WriteString(" x ")
-	for tempy := 1; tempy <= g.Width; tempy++ {
-		header.WriteString(fmt.Sprintf(" %d ", tempy))
+
+	// for numbers < 9, they takes just 1 grid.
+	// but numbers > 9, they takes more than 1 grid
+	// so I set a two side margin to numbers < 9
+	// just left side margin to number > 10
+	for i := 1; i <= g.Width; i++ {
+		if i > 9 {
+			header.WriteString(fmt.Sprintf(" %d", i))
+		} else {
+			header.WriteString(fmt.Sprintf(" %d ", i))
+		}
+	}
+
+	// range the board
+	for tempy := 1; tempy <= g.Height; tempy++ {
+		// this is also like above
 		if tempy > 9 {
 			output.WriteString(fmt.Sprintf("%d ", tempy))
 		} else {
 			output.WriteString(fmt.Sprintf(" %d ", tempy))
 		}
-		for tempx := 1; tempx <= g.Height; tempx++ {
+		// write state
+		for tempx := 1; tempx <= g.Width; tempx++ {
 			output.WriteString(g.str[g.Board[tempx][tempy]])
 		}
+		// line end
 		output.WriteString("\n")
 	}
 
