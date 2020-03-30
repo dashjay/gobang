@@ -33,7 +33,7 @@ func NewGame(w, h int) *Game {
 	return &g
 }
 
-func (g *Game) Print() {
+func (g *Game) Print() string {
 	var header strings.Builder
 	var output strings.Builder
 	header.WriteString(" x ")
@@ -52,8 +52,8 @@ func (g *Game) Print() {
 
 	output.WriteString("y轴 \n")
 	header.WriteString("x轴 \n")
-	fmt.Print(header.String())
-	fmt.Print(output.String())
+
+	return header.String() + output.String()
 }
 
 func (g *Game) Point(x, y int) {
